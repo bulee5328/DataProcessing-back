@@ -2,8 +2,7 @@ import yfinance as yf
 import numpy as np
 import pandas as pd
 import json
-#-------------------------------------------------------
-# RSI 계산
+
 def calc_rsi(series, period=14):
     delta = series.diff()
     gain = np.where(delta > 0, delta, 0)
@@ -14,84 +13,108 @@ def calc_rsi(series, period=14):
     rsi = 100 - (100 / (1 + rs))
     return rsi
 
-# MACD 계산
 def calc_macd(series, fast=12, slow=26, signal=9):
     ema_fast = series.ewm(span=fast, adjust=False).mean()
     ema_slow = series.ewm(span=slow, adjust=False).mean()
     macd = ema_fast - ema_slow
     signal_line = macd.ewm(span=signal, adjust=False).mean()
     return macd, signal_line
-#-------------------------------------------------------
-#-------------------------------------------------------
-tickerlist = ["AAPL", "MSFT", "GOOGL", "000660.KS"]
-results = []
-
-for t in tickerlist:
-  tk = yf.Ticker(t)
-  info = tk.info
-  hist = tk.history(period="1y")
-  returns = hist["Close"].pct_change().dropna()
-
-  #MDD
-  cum_returns = (1 + returns).cumprod()
-  drawdown = (cum_returns / cum_returns.cummax()) - 1
 
 
-  #MOMENTUM
-  macd, signal_line = calc_macd(hist["Close"])
-  rsi_14 = calc_rsi(hist["Close"], 14).iloc[-1]
 
-  #성장성
-  earn = tk.earnings
+def analyze_stock(ticker_symbol):
+    try:
+        tk = yf.Ticker(ticker_symbol)
+        info = tk.info
+        hist = tk.history(period="1y")
 
-  data = {
-    "Ticker": t,
-    "PER": info.get("trailingPE"),
-    "ROE": info.get("returnOnEquity"),
-    "Volatility": returns.std(),
+        if hist.empty:
+            return {"Ticker": ticker_symbol, "Error": "No data"}
 
-    "ROE": info.get("returnOnEquity"),
-    "ROA": info.get("returnOnAssets"),
-    "Operating Margin": info.get("operatingMargins"),
-    "Profit Margin": info.get("profitMargins"),
-    "EPS": info.get("trailingEps"),
+        returns = hist["Close"].pct_change().dropna()
 
-    "PER": info.get("trailingPE"),
-    "PBR": info.get("priceToBook"),
-    "PSR": info.get("priceToSalesTrailing12Months"),
-    "EV/EBITDA": info.get("enterpriseToEbitda"),
-    "Dividend Yield": info.get("dividendYield"),
+        #MDD
+        cum_returns = (1 + returns).cumprod()
+        drawdown = (cum_returns / cum_returns.cummax()) - 1
 
-    "Debt/Equity": info.get("debtToEquity"),
-    "Current Ratio": info.get("currentRatio"),
-    "Quick Ratio": info.get("quickRatio"),
-    
-    "Beta": info.get("beta"),
-    "σ (std)": returns.std(),
-    "MDD": drawdown.min(),
+        #모멘텀
+        macd, signal_line = calc_macd(hist["Close"])
+        rsi_14 = calc_rsi(hist["Close"], 14).iloc[-1]
 
-    "6개월 수익률": hist["Close"].iloc[-1] / hist["Close"].iloc[-126] - 1,
-    "20일 이동평균선": hist["Close"].rolling(20).mean().iloc[-1],
-    "60일 이동평균선": hist["Close"].rolling(60).mean().iloc[-1],
-    "이평괴리율(20일)": (hist["Close"].iloc[-1] - hist["Close"].rolling(20).mean().iloc[-1])
-                    / hist["Close"].rolling(20).mean().iloc[-1],
-    "RSI(14)": rsi_14,
-    "MACD": macd.iloc[-1],
-    "Signal": signal_line.iloc[-1],
+        data = {
+            "Ticker": ticker_symbol,
+            # 수익성
+            "ROE": info.get("returnOnEquity"),
+            "ROA": info.get("returnOnAssets"),
+            "Operating Margin": info.get("operatingMargins"),
+            "Profit Margin": info.get("profitMargins"),
+            "EPS": info.get("trailingEps"),
 
-    # "매출 성장률 (YoY)": (earn["Revenue"].iloc[-1] / earn["Revenue"].iloc[-2]) - 1
-    # if len(earn) > 1 else None,
-    # "이익 성장률 (YoY)": (earn["Earnings"].iloc[-1] / earn["Earnings"].iloc[-2]) - 1
-    # if len(earn) > 1 else None,
-    # "EPS 성장률 (최근)": info.get("earningsGrowth"),
-    # "매출 성장률 (최근)": info.get("revenueGrowth"),
-    # "영업이익 성장률": info.get("operatingMargins"),
-  }
-  results.append(data)
+            # 가치
+            "PER": info.get("trailingPE"),
+            "PBR": info.get("priceToBook"),
+            "PSR": info.get("priceToSalesTrailing12Months"),
+            "EV/EBITDA": info.get("enterpriseToEbitda"),
+            "Dividend Yield": info.get("dividendYield"),
 
-df = pd.DataFrame(results)
-#-------------------------------------------------------
-#-------------------------------------------------------
+            # 안정성
+            "Debt/Equity": info.get("debtToEquity"),
+            "Current Ratio": info.get("currentRatio"),
+            "Quick Ratio": info.get("quickRatio"),
 
-json_str = df.to_json(orient="records", force_ascii=False)
-print(json_str)
+            # 변동성
+            "Beta": info.get("beta"),
+            "σ (std)": returns.std(),
+            "MDD": drawdown.min(),
+
+            # 모멘텀
+            "6개월 수익률": hist["Close"].iloc[-1] / hist["Close"].iloc[-126] - 1 if len(hist) > 126 else None,
+            "20일 이동평균선": hist["Close"].rolling(20).mean().iloc[-1],
+            "60일 이동평균선": hist["Close"].rolling(60).mean().iloc[-1],
+            "이평괴리율(20일)": (hist["Close"].iloc[-1] - hist["Close"].rolling(20).mean().iloc[-1])
+                            / hist["Close"].rolling(20).mean().iloc[-1],
+            "RSI(14)": rsi_14,
+            "MACD": macd.iloc[-1],
+            "Signal": signal_line.iloc[-1],
+        }
+
+        return data
+
+    except Exception as e:
+        return {"Ticker": ticker_symbol, "Error": str(e)}
+
+
+
+def analyze_stocks(ticker_list):
+    results = []
+    for t in ticker_list:
+        print(f"분석 중... {t}")
+        result = analyze_stock(t)
+        results.append(result)
+    return pd.DataFrame(results)
+
+
+
+def df_to_json(df):
+    json_str = df.to_json(orient="records", force_ascii=False, indent=4)
+    return json_str
+
+
+
+def main():
+    ticker_list = ["AAPL", "MSFT", "GOOGL", "000660.KS"]
+    df = analyze_stocks(ticker_list)
+
+    # JSON 변환
+    json_result = df_to_json(df)
+    print(json_result)
+
+    # 파일 저장 (선택)
+    with open("stock_analysis.json", "w", encoding="utf-8") as f:
+        f.write(json_result)
+
+    print("\n✅ 분석 완료! 결과가 stock_analysis.json에 저장되었습니다.")
+
+
+if __name__ == "__main__":
+    main()
