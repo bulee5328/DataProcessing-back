@@ -1,5 +1,7 @@
 import yfinance as yf
+import numpy as np
 import pandas as pd
+import json
 #-------------------------------------------------------
 # RSI 계산
 def calc_rsi(series, period=14):
@@ -90,7 +92,6 @@ for t in tickerlist:
 df = pd.DataFrame(results)
 #-------------------------------------------------------
 #-------------------------------------------------------
-import json
 
 json_str = df.to_json(orient="records", force_ascii=False)
 print(json_str)
