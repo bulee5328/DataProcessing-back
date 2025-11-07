@@ -88,7 +88,6 @@ def analyze_stock(ticker_symbol):
 def analyze_stocks(ticker_list):
     results = []
     for t in ticker_list:
-        print(f"분석 중... {t}")
         result = analyze_stock(t)
         results.append(result)
     return pd.DataFrame(results)
@@ -109,11 +108,11 @@ def main():
     json_result = df_to_json(df)
     print(json_result)
 
-    # 파일 저장 (선택)
+    # 파일 저장
     with open("stock_analysis.json", "w", encoding="utf-8") as f:
         f.write(json_result)
 
-    print("\n✅ 분석 완료! 결과가 stock_analysis.json에 저장되었습니다.")
+    print("stock_analysis.json에 저장.")
 
 
 if __name__ == "__main__":
