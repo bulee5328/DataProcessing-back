@@ -1,0 +1,96 @@
+import yfinance as yf
+import pandas as pd
+#-------------------------------------------------------
+# RSI 계산
+def calc_rsi(series, period=14):
+    delta = series.diff()
+    gain = np.where(delta > 0, delta, 0)
+    loss = np.where(delta < 0, -delta, 0)
+    avg_gain = pd.Series(gain).rolling(period).mean()
+    avg_loss = pd.Series(loss).rolling(period).mean()
+    rs = avg_gain / avg_loss
+    rsi = 100 - (100 / (1 + rs))
+    return rsi
+
+# MACD 계산
+def calc_macd(series, fast=12, slow=26, signal=9):
+    ema_fast = series.ewm(span=fast, adjust=False).mean()
+    ema_slow = series.ewm(span=slow, adjust=False).mean()
+    macd = ema_fast - ema_slow
+    signal_line = macd.ewm(span=signal, adjust=False).mean()
+    return macd, signal_line
+#-------------------------------------------------------
+#-------------------------------------------------------
+tickerlist = ["AAPL", "MSFT", "GOOGL", "000660.KS"]
+results = []
+
+for t in tickerlist:
+  tk = yf.Ticker(t)
+  info = tk.info
+  hist = tk.history(period="1y")
+  returns = hist["Close"].pct_change().dropna()
+
+  #MDD
+  cum_returns = (1 + returns).cumprod()
+  drawdown = (cum_returns / cum_returns.cummax()) - 1
+
+
+  #MOMENTUM
+  macd, signal_line = calc_macd(hist["Close"])
+  rsi_14 = calc_rsi(hist["Close"], 14).iloc[-1]
+
+  #성장성
+  earn = tk.earnings
+
+  data = {
+    "Ticker": t,
+    "PER": info.get("trailingPE"),
+    "ROE": info.get("returnOnEquity"),
+    "Volatility": returns.std(),
+
+    "ROE": info.get("returnOnEquity"),
+    "ROA": info.get("returnOnAssets"),
+    "Operating Margin": info.get("operatingMargins"),
+    "Profit Margin": info.get("profitMargins"),
+    "EPS": info.get("trailingEps"),
+
+    "PER": info.get("trailingPE"),
+    "PBR": info.get("priceToBook"),
+    "PSR": info.get("priceToSalesTrailing12Months"),
+    "EV/EBITDA": info.get("enterpriseToEbitda"),
+    "Dividend Yield": info.get("dividendYield"),
+
+    "Debt/Equity": info.get("debtToEquity"),
+    "Current Ratio": info.get("currentRatio"),
+    "Quick Ratio": info.get("quickRatio"),
+    
+    "Beta": info.get("beta"),
+    "σ (std)": returns.std(),
+    "MDD": drawdown.min(),
+
+    "6개월 수익률": hist["Close"].iloc[-1] / hist["Close"].iloc[-126] - 1,
+    "20일 이동평균선": hist["Close"].rolling(20).mean().iloc[-1],
+    "60일 이동평균선": hist["Close"].rolling(60).mean().iloc[-1],
+    "이평괴리율(20일)": (hist["Close"].iloc[-1] - hist["Close"].rolling(20).mean().iloc[-1])
+                    / hist["Close"].rolling(20).mean().iloc[-1],
+    "RSI(14)": rsi_14,
+    "MACD": macd.iloc[-1],
+    "Signal": signal_line.iloc[-1],
+
+    # "매출 성장률 (YoY)": (earn["Revenue"].iloc[-1] / earn["Revenue"].iloc[-2]) - 1
+    # if len(earn) > 1 else None,
+    # "이익 성장률 (YoY)": (earn["Earnings"].iloc[-1] / earn["Earnings"].iloc[-2]) - 1
+    # if len(earn) > 1 else None,
+    # "EPS 성장률 (최근)": info.get("earningsGrowth"),
+    # "매출 성장률 (최근)": info.get("revenueGrowth"),
+    # "영업이익 성장률": info.get("operatingMargins"),
+  }
+  results.append(data)
+
+df = pd.DataFrame(results)
+#-------------------------------------------------------
+#-------------------------------------------------------
+import json
+
+json_str = df.to_json(orient="records", force_ascii=False)
+print(json_str)
