@@ -9,7 +9,7 @@ app = FastAPI()
 # ex) /factor #post
 
 # 2.
-# @app.postfactor("/factor")
+# @app.post("/factor")
 # 팩터 생성 및 포트폴리오 제작
 # 2.1
 # 선택 지표, 각각 rank 구하기
