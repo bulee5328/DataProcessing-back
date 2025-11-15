@@ -1,0 +1,118 @@
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>나만의 포트폴리오 제작</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}">
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <h1>나만의 포트폴리오 제작</h1>
+            <a href="#" class="home-link">Home Page</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <main>
+            <section class="description">
+                <h2>원하는 키워드를 선택해주세요</h2>
+                <p>선택한 키워드에 따라 사용자에게 원하는 주식 포트폴리오를 제작하고 추천해드려요.</p>
+            </section>
+
+            <section class="description">
+                <h2>주식의 주요 지표를 선택해서 설정해주세요</h2>
+                <p>PER, PBR, ROE등 주요 지표 설정에 따라 주식 종목을 추천해드려요.</p>
+            </section>
+
+            <div class="card-grid">
+                <div class="card card-profitability">
+                    <div class="card-header">
+                        <span class="icon" role="img" aria-label="smiling face">😊</span>
+                        <div>
+                            <h3>수익성/가치</h3>
+                            <span>Profitability</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <button class="indicator-btn" data-category="수익성">ROE</button>
+                        <button class="indicator-btn" data-category="수익성">ROA</button>
+                        <button class="indicator-btn" data-category="수익성">PER</button>
+                    </div>
+                </div>
+
+                <div class="card card-valuation">
+                    <div class="card-header">
+                        <span class="icon" role="img" aria-label="thinking face">🤔</span>
+                        <div>
+                            <h3>가치</h3>
+                            <span>Valuation</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <button class="indicator-btn" data-category="성장성">매출액 성장률</button>
+                        <button class="indicator-btn" data-category="성장성">순이익 성장률</button>
+                        <button class="indicator-btn" data-category="성장성">EPS 성장률(향후 5년 예상)</button>
+                    </div>
+                </div>
+
+                <div class="card card-momentum">
+                    <div class="card-header">
+                        <span class="icon" role="img" aria-label="chart increasing">📈</span>
+                        <div>
+                            <h3>모멘텀</h3>
+                            <span>Momentum</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <button class="indicator-btn" data-category="모멘텀">20일 이동평균선</button>
+                        <button class="indicator-btn" data-category="모멘텀">RSI</button>
+                        <button class="indicator-btn" data-category="모멘텀">MACD</button>
+                    </div>
+                </div>
+
+                <div class="card card-stability">
+                    <div class="card-header">
+                        <span class="icon" role="img" aria-label="shield">🛡️</span>
+                        <div>
+                            <h3>안정성</h3>
+                            <span>Stability</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <button class="indicator-btn" data-category="안정성">부채비율(Dept ratio)</button>
+                        <button class="indicator-btn" data-category="안정성">유동비율(Current ratio)</button>
+                        <button class="indicator-btn" data-category="안정성">당좌비율(Quick Ratio)</button>
+                    </div>
+                </div>
+            </div>
+
+            <section id="advanced-settings" class="advanced-settings-container">
+                <h2>Advanced Settings</h2>
+                </section>
+
+            <section id="result-display" class="result-display-container hidden">
+                <div class="result-card">
+                    <div class="result-header">
+                        <h2 id="result-title">포트폴리오 분석 결과</h2>
+                    </div>
+
+                    <div class="result-body">
+                        </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', path='script.js') }}"></script>
+</body>
+</html>

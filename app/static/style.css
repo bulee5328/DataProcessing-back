@@ -1,0 +1,373 @@
+/* 기본 스타일 및 폰트 설정 */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Inter', sans-serif; /* Inter 폰트 적용 */
+    background-color: #ECF7FA; /* 홈페이지 배경색 */
+    color: #000000; /* 전체 텍스트 색상 검은색 */
+}
+
+/* 1. 헤더 */
+header {
+    background-color: #FFFFFF; /* 헤더 배경색 흰색으로 변경 */
+    margin-bottom: 40px; /* 메인 콘텐츠와의 간격 */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* 헤더 하단에 그림자 추가 */
+}
+
+/* 헤더 내부의 .container가 flex 역할을 하도록 수정 */
+header .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px; /* 모든 방향 20px */
+}
+
+header h1 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #000000;
+}
+
+header .home-link {
+    font-size: 16px;
+    font-weight: 400; /* 굵기 400으로 수정 */
+    color: #000000;
+    text-decoration: none;
+    /* 버튼 스타일 제거 */
+    border: none;
+    padding: 0;
+}
+
+/* 2. 메인 콘텐츠 컨테이너 */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* 3. 설명 섹션 */
+.description {
+    margin-bottom: 30px;
+}
+
+.description h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #000000;
+    margin-bottom: 8px;
+}
+
+.description p {
+    font-size: 14px;
+    font-weight: 400;
+    color: #000000;
+}
+
+/* 4. 카드 그리드 (사용자님 수정 반영) */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    margin-bottom: 40px;
+}
+
+.card {
+    background-color: #FFFFFF; /* 카드 배경색 흰색 */
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 불투명도 10% 그림자 */
+    overflow: hidden;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    padding: 16px 20px;
+    gap: 10px;
+    background-color: transparent; /* 헤더 배경색 제거 */
+}
+
+.card-header .icon {
+    font-size: 28px;
+    opacity: 1; /* 불투명도 100% */
+}
+
+.card-header h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #000000;
+}
+
+.card-header span {
+    font-size: 12px;
+    color: #000000;
+    opacity: 0.55; /* 불투명도 55% */
+}
+
+.card-body {
+    padding: 0 20px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.indicator-btn {
+    width: 100%;
+    padding: 12px 16px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: center; /* 텍스트 가운데 정렬 */
+    transition: background-color 0.2s, box-shadow 0.2s;
+}
+
+.indicator-btn:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+/* 카드 색상별 버튼 스타일 */
+.card-profitability .indicator-btn { background-color: #FEE7ED; }
+.card-valuation .indicator-btn { background-color: #F5EEFC; }
+.card-momentum .indicator-btn { background-color: #FFF8E6; }
+.card-stability .indicator-btn { background-color: #EBF8F9; }
+
+/* 5. 고급 설정 섹션 */
+.advanced-settings-container {
+    padding-top: 20px;
+}
+
+.advanced-settings-container h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #000000;
+    margin-bottom: 20px;
+    display: none; /* JS로 컨트롤하기 위해 기본 숨김 */
+}
+
+/* .active 클래스가 추가되면 h2를 보여줌 */
+.advanced-settings-container.active h2 {
+    display: block;
+}
+
+.advanced-setting-card {
+    background-color: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.1); /* 불투명도 10% 테두리 */
+    border-radius: 12px;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 통일 */
+}
+
+.advanced-setting-card .card-header {
+    justify-content: space-between;
+    border-bottom: 1px solid #F0F0F0;
+    background-color: #FFFFFF; /* 헤더 배경색 흰색 */
+    border-radius: 11px 11px 0 0;
+    padding: 12px 20px;
+}
+
+.advanced-setting-card .card-header h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #000000;
+}
+
+.advanced-setting-card .card-body {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    /* gap: 16px; -> 항목별 margin-bottom으로 대체 */
+}
+
+.remove-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    font-weight: 700;
+    color: #BFBFBF;
+    cursor: pointer;
+    padding: 0 8px;
+    transition: color 0.2s;
+}
+
+.remove-btn:hover {
+    color: #D95A5A;
+}
+
+/* 값 조절 (증가/감소) 래퍼 (기존 weight-group 스타일 병합) */
+.input-wrapper {
+    display: flex;
+    justify-content: space-between; /* label과 input-group을 양 끝으로 */
+    align-items: center;
+    gap: 12px;
+    /* 항목(row)이 추가될 때마다 하단에 간격을 줌 */
+    margin-bottom: 12px; 
+}
+
+.input-wrapper label {
+    font-size: 14px;
+    color: #000000;
+    flex-grow: 1; /* 라벨이 남은 공간을 모두 차지하도록 함 */
+    font-weight: 500; /* 굵기 추가 */
+    text-align: left; /* 라벨 텍스트는 왼쪽 정렬 유지 */
+}
+
+.input-wrapper .input-group {
+    display: flex;
+    align-items: center;
+    border: 1px solid #D9D9D9;
+    border-radius: 8px;
+    overflow: hidden;
+    flex-shrink: 0; /* 입력창 그룹이 줄어들지 않도록 고정 */
+}
+
+.input-wrapper .btn-adjust {
+    background-color: #F0F0F0;
+    border: none;
+    padding: 8px 12px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    color: #595959;
+    transition: background-color 0.2s;
+}
+
+.input-wrapper .btn-adjust:hover {
+    background-color: #e0e0e0;
+}
+
+.input-wrapper input[type="number"] {
+    border: none;
+    padding: 8px 12px;
+    font-size: 14px;
+    width: 80px; /* 너비 조정 */
+    -moz-appearance: textfield;
+    font-family: 'Inter', sans-serif; /* 폰트 적용 */
+    text-align: right; /* 오른쪽 정렬 */
+}
+
+.input-wrapper input::-webkit-outer-spin-button,
+.input-wrapper input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+
+/* 설정값 입력 버튼 */
+.set-value-btn {
+    background-color: #00B1BE; /* 안정성 버튼 색상 사용 */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top: 10px;
+    /* align-self: flex-end; -> .card-body에서 정렬 제어 */
+}
+
+.set-value-btn:hover {
+    background-color: #009aa6;
+}
+
+/* 새로 추가된 결과 보기 버튼 스타일 */
+.result-btn {
+    background-color: #EB4C7B; /* 수익성 버튼 색상 사용 */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top: 10px;
+    margin-left: 10px; /* 설정값 입력 버튼과의 간격 */
+    /* align-self: flex-end; -> .card-body에서 정렬 제어 */
+}
+
+.result-btn:hover {
+    background-color: #d33a65;
+}
+
+
+/* 버튼들을 한 줄에 나란히 놓기 위해 부모(.card-body)에 flex-wrap 설정 */
+.advanced-setting-card .card-body {
+    flex-wrap: wrap; /* 버튼이 넘칠 경우 줄바꿈 */
+    flex-direction: row; /* 자식 요소들을 가로로 배치 (항목은 세로로 쌓임) */
+    justify-content: flex-end; /* 버튼들을 오른쪽으로 정렬 */
+}
+
+/* .input-wrapper는 가로 전체 너비를 차지하도록 설정 */
+.advanced-setting-card .card-body .input-wrapper {
+    width: 100%;
+    order: -1; /* 버튼들보다 항상 위에 오도록 순서 설정 */
+}
+
+/* 6. 동적 결과 표시 섹션 */
+.result-display-container {
+    padding-top: 40px;
+    margin-bottom: 60px;
+}
+.result-display-container.hidden {
+    display: none;
+}
+
+.result-card {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #FFFFFF;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.result-header {
+    padding: 24px 30px;
+    border-bottom: 1px solid #F0F0F0;
+}
+
+.result-header h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #000000;
+}
+
+.result-body {
+    padding: 30px;
+}
+
+.result-body h3 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* 차트 컨테이너 스타일 */
+.chart-container {
+    position: relative;
+    height: 400px;
+    width: 100%;
+    max-width: 500px;
+    margin: 20px auto 0; /* 하단 여백 조정 */
+}
+
+/* [추가] 수익률 비교 안내 문구 스타일 */
+.result-body .performance-note {
+    font-size: 14px;
+    color: #595959;
+    background-color: #FAFAFA;
+    border: 1px solid #F0F0F0;
+    border-radius: 8px;
+    padding: 16px;
+    line-height: 1.6;
+}
